@@ -87,7 +87,7 @@ impl<F: FftField> PolyProcessorStrategy<F> {
 
         let omegas: Vec<_> = domain.elements().collect();
         if roots == omegas {
-            let fft_processor = FftProcessor::<F>::construct(n)?;
+            let fft_processor = FftProcessor::<F>::construct(domain)?;
             return Ok(Box::new(fft_processor))
         } else {
             let subtree = Pow2ProductSubtree::construct(roots)?;

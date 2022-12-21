@@ -1,5 +1,5 @@
 use ark_ff::FftField;
-use ark_poly::{GeneralEvaluationDomain, EvaluationDomain, Polynomial, univariate::DensePolynomial, UVPolynomial};
+use ark_poly::{GeneralEvaluationDomain, EvaluationDomain, Polynomial, univariate::DensePolynomial, UVPolynomial, domain};
 
 use crate::{
     error::Error,
@@ -11,12 +11,12 @@ pub struct FftProcessor<F: FftField> {
 }
 
 impl<F: FftField> FftProcessor<F> {
-    pub fn construct(n: usize) -> Result<Self, Error> {
-        if n & n - 1 != 0 {
+    pub fn construct(domain: GeneralEvaluationDomain<F>) -> Result<Self, Error> {
+        if domain.size() & domain.size() - 1 != 0 {
             return Err(Error::NotPow2);
         }
         Ok(Self {
-            domain: GeneralEvaluationDomain::new(n).unwrap()
+            domain
         })
     }
 }
