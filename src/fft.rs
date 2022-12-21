@@ -22,6 +22,9 @@ impl<F: FftField> FftProcessor<F> {
 }
 
 impl<F: FftField> PolyProcessor<F> for FftProcessor<F> {
+    fn get_vanishing(&self) -> DensePolynomial<F> {
+        self.domain.vanishing_polynomial().into()
+    }
     fn evaluate_over_domain(&self, f: &DensePolynomial<F>) -> Vec<F> {
         assert!(f.degree() < self.domain.size());
         self.domain.fft(f)
