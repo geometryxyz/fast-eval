@@ -56,6 +56,7 @@ impl<F: FftField> Pow2ProductSubtree<F> {
         let n = self.layers[0].len();
         let k = self.layers.len() - 1;
 
+        assert!(f.degree() < n);
         FastEval::divide_down_the_tree(&self.layers, n, (k, 0), f)
     }
 

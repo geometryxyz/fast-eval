@@ -9,6 +9,7 @@ pub use crate::subtree::Pow2ProductSubtree;
 pub mod error;
 pub mod fast_eval;
 pub mod subtree;
+pub mod fft;
 
 /// Saves one degree of 2 for FFT when a, b are monic polynomials in leading coefficient
 /// panics if a or b are not monic and degree 2
