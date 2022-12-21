@@ -6,6 +6,7 @@ use ark_poly::{
     UVPolynomial,
 };
 use error::Error;
+use fft::FftProcessor;
 
 pub use crate::subtree::Pow2ProductSubtree;
 
@@ -73,6 +74,8 @@ pub trait PolyProcessor<F: FftField> {
     fn batch_evaluate_lagrange_basis(&self, point: &F) -> Vec<F>;
 }
 
+// 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 = 16
+// 0       1       2          3        4 = 4
 pub struct PolyProcessorStrategy<F: FftField> {
     _f: PhantomData<F>
 }
@@ -84,11 +87,11 @@ impl<F: FftField> PolyProcessorStrategy<F> {
 
         let omegas: Vec<_> = domain.elements().collect();
         if roots == omegas {
-            // return FftProcessor
-            todo!()
+            let fft_processor = FftProcessor::<F>::construct(n).unwrap();
+            return Box::new(fft_processor)
         } else {
-            // return SubTree
-            todo!()
+            let subtree = Pow2ProductSubtree::construct(roots).unwrap();
+            return Box::new(subtree);
         }
     }
 }

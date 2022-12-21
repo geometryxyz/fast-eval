@@ -1,7 +1,7 @@
 use ark_ff::{batch_inversion, FftField};
 use ark_poly::{univariate::DensePolynomial, Polynomial, UVPolynomial};
 
-use crate::fast_eval::FastEval;
+use crate::{fast_eval::FastEval, PolyProcessor};
 pub use crate::{error::Error, multiply_pow2_monic_polys};
 
 pub struct Pow2ProductSubtree<F: FftField> {
@@ -51,8 +51,10 @@ impl<F: FftField> Pow2ProductSubtree<F> {
 
         Ok(Self { layers, ri })
     }
+}
 
-    pub fn evaluate_over_domain(&self, f: &DensePolynomial<F>) -> Vec<F> {
+impl<F: FftField> PolyProcessor<F> for Pow2ProductSubtree<F> {
+    fn evaluate_over_domain(&self, f: &DensePolynomial<F>) -> Vec<F> {
         let n = self.layers[0].len();
         let k = self.layers.len() - 1;
 
@@ -60,7 +62,7 @@ impl<F: FftField> Pow2ProductSubtree<F> {
         FastEval::divide_down_the_tree(&self.layers, n, (k, 0), f)
     }
 
-    pub fn interpolate(&self, evals: &[F]) -> DensePolynomial<F> {
+    fn interpolate(&self, evals: &[F]) -> DensePolynomial<F> {
         assert_eq!(evals.len(), self.ri.len());
         let k = self.layers.len() - 1;
         let evals = evals
@@ -71,7 +73,7 @@ impl<F: FftField> Pow2ProductSubtree<F> {
         FastEval::multiply_up_the_tree(&self.layers, (0, evals.len() - 1), (k, 0), &evals)
     }
 
-    pub fn batch_evaluate_lagrange_basis(&self, point: &F) -> Vec<F> {
+    fn batch_evaluate_lagrange_basis(&self, point: &F) -> Vec<F> {
         let mut monomials_evals = Vec::with_capacity(self.layers[0].len());
         for root_monomial in &self.layers[0] {
             monomials_evals.push(root_monomial.evaluate(point));
@@ -96,7 +98,7 @@ mod subtree_tests {
     use ark_poly::{univariate::DensePolynomial, Polynomial, UVPolynomial};
     use ark_std::test_rng;
 
-    use crate::subtree::Pow2ProductSubtree;
+    use crate::{subtree::Pow2ProductSubtree, PolyProcessor};
 
     /// given x coords construct Li polynomials
     fn construct_lagrange_basis<F: FftField>(evaluation_domain: &[F]) -> Vec<DensePolynomial<F>> {
