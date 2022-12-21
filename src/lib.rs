@@ -1,8 +1,11 @@
+use std::marker::PhantomData;
+
 use ark_ff::FftField;
 use ark_poly::{
     univariate::DensePolynomial, EvaluationDomain, GeneralEvaluationDomain, Polynomial,
     UVPolynomial,
 };
+use error::Error;
 
 pub use crate::subtree::Pow2ProductSubtree;
 
@@ -62,6 +65,33 @@ pub fn multiply_pow2_monic_polys<F: FftField>(
     product_poly
 }
 
+pub trait PolyProcessor<F: FftField> {
+    fn evaluate_over_domain(&self, f: &DensePolynomial<F>) -> Vec<F>;
+
+    fn interpolate(&self, evals: &[F]) -> DensePolynomial<F>;
+
+    fn batch_evaluate_lagrange_basis(&self, point: &F) -> Vec<F>;
+}
+
+pub struct PolyProcessorStrategy<F: FftField> {
+    _f: PhantomData<F>
+}
+
+impl<F: FftField> PolyProcessorStrategy<F> {
+    pub fn resolve(roots: &[F]) -> Box<dyn PolyProcessor<F>> {
+        let n = roots.len(); 
+        let domain = GeneralEvaluationDomain::<F>::new(n).unwrap();
+
+        let omegas: Vec<_> = domain.elements().collect();
+        if roots == omegas {
+            // return FftProcessor
+            todo!()
+        } else {
+            // return SubTree
+            todo!()
+        }
+    }
+}
 
 #[cfg(test)]
 mod tests {
