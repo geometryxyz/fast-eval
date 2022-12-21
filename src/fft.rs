@@ -1,5 +1,5 @@
 use ark_ff::FftField;
-use ark_poly::{GeneralEvaluationDomain, EvaluationDomain, Polynomial, univariate::DensePolynomial, UVPolynomial, domain};
+use ark_poly::{GeneralEvaluationDomain, EvaluationDomain, Polynomial, univariate::DensePolynomial, UVPolynomial};
 
 use crate::{
     error::Error,
