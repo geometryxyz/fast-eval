@@ -81,17 +81,17 @@ pub struct PolyProcessorStrategy<F: FftField> {
 }
 
 impl<F: FftField> PolyProcessorStrategy<F> {
-    pub fn resolve(roots: &[F]) -> Box<dyn PolyProcessor<F>> {
+    pub fn resolve(roots: &[F]) -> Result<Box<dyn PolyProcessor<F>>, Error> {
         let n = roots.len(); 
         let domain = GeneralEvaluationDomain::<F>::new(n).unwrap();
 
         let omegas: Vec<_> = domain.elements().collect();
         if roots == omegas {
-            let fft_processor = FftProcessor::<F>::construct(n).unwrap();
-            return Box::new(fft_processor)
+            let fft_processor = FftProcessor::<F>::construct(n)?;
+            return Ok(Box::new(fft_processor))
         } else {
-            let subtree = Pow2ProductSubtree::construct(roots).unwrap();
-            return Box::new(subtree);
+            let subtree = Pow2ProductSubtree::construct(roots)?;
+            return Ok(Box::new(subtree));
         }
     }
 }
