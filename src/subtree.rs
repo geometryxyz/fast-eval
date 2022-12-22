@@ -110,6 +110,10 @@ impl<F: FftField> PolyProcessor<F> for Pow2ProductSubtree<F> {
         self.layers[k][0].clone()
     }
 
+    fn get_ri(&self) -> Vec<F> {
+        self.ri.clone()
+    }
+
     fn evaluate_over_domain(&self, f: &DensePolynomial<F>) -> Vec<F> {
         let n = self.layers[0].len();
         let k = self.layers.len() - 1;

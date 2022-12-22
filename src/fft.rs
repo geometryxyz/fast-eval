@@ -25,6 +25,12 @@ impl<F: FftField> PolyProcessor<F> for FftProcessor<F> {
     fn get_vanishing(&self) -> DensePolynomial<F> {
         self.domain.vanishing_polynomial().into()
     }
+
+    fn get_ri(&self) -> Vec<F> {
+        // TODO: is there a fast way of computing this without subtree
+        vec![F::one()]
+    }
+
     fn evaluate_over_domain(&self, f: &DensePolynomial<F>) -> Vec<F> {
         assert!(f.degree() < self.domain.size());
         self.domain.fft(f)

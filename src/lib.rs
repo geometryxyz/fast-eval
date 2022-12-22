@@ -16,7 +16,9 @@ pub mod fft;
 
 pub trait PolyProcessor<F: FftField> {
     fn get_vanishing(&self) -> DensePolynomial<F>;
-    
+
+    fn get_ri(&self) -> Vec<F>;
+
     fn evaluate_over_domain(&self, f: &DensePolynomial<F>) -> Vec<F>;
 
     fn interpolate(&self, evals: &[F]) -> DensePolynomial<F>;
