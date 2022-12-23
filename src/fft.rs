@@ -27,7 +27,6 @@ impl<F: FftField> PolyProcessor<F> for FftProcessor<F> {
     }
 
     fn get_ri(&self) -> Vec<F> {
-        // TODO: is there a fast way of computing this without subtree
         vec![F::one()]
     }
 
