@@ -1,4 +1,4 @@
-use ark_ff::FftField;
+use ark_ff::{FftField, batch_inversion};
 use ark_poly::{GeneralEvaluationDomain, EvaluationDomain, Polynomial, univariate::DensePolynomial, UVPolynomial};
 
 use crate::{
@@ -27,7 +27,10 @@ impl<F: FftField> PolyProcessor<F> for FftProcessor<F> {
     }
 
     fn get_ri(&self) -> Vec<F> {
-        vec![F::one()]
+        // zH'(w^i) =  n * w^(-i)
+        let mut root_inverses: Vec<F> = self.domain.elements().collect();
+        batch_inversion(&mut root_inverses);
+        root_inverses.iter().map(|&w_inv_i| w_inv_i * self.domain.size_as_field_element()).collect()
     }
 
     fn evaluate_over_domain(&self, f: &DensePolynomial<F>) -> Vec<F> {
