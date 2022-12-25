@@ -28,9 +28,13 @@ impl<F: FftField> PolyProcessor<F> for FftProcessor<F> {
 
     fn get_ri(&self) -> Vec<F> {
         // zH'(w^i) =  n * w^(-i)
-        let mut root_inverses: Vec<F> = self.domain.elements().collect();
-        batch_inversion(&mut root_inverses);
-        root_inverses.iter().map(|&w_inv_i| w_inv_i * self.domain.size_as_field_element()).collect()
+        let n = self.domain.size();
+        let n_field = self.domain.size_as_field_element();
+        let mut ri = Vec::with_capacity(n);
+        for i in 0..n {
+            ri.push(n_field * self.domain.element(n - i - 1));
+        }
+        ri
     }
 
     fn evaluate_over_domain(&self, f: &DensePolynomial<F>) -> Vec<F> {
