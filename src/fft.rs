@@ -32,7 +32,7 @@ impl<F: FftField> PolyProcessor<F> for FftProcessor<F> {
         let n_field = self.domain.size_as_field_element();
         let mut ri = Vec::with_capacity(n);
         for i in 0..n {
-            ri.push(n_field * self.domain.element(n - i - 1));
+            ri.push(n_field * self.domain.element(n - i));
         }
         ri
     }
