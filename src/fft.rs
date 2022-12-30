@@ -1,13 +1,13 @@
-use ark_ff::{FftField, batch_inversion};
-use ark_poly::{GeneralEvaluationDomain, EvaluationDomain, Polynomial, univariate::DensePolynomial, UVPolynomial};
-
-use crate::{
-    error::Error,
-    PolyProcessor
+use ark_ff::FftField;
+use ark_poly::{
+    univariate::DensePolynomial, EvaluationDomain, GeneralEvaluationDomain, Polynomial,
+    UVPolynomial,
 };
 
+use crate::{error::Error, PolyProcessor};
+
 pub struct FftProcessor<F: FftField> {
-    domain: GeneralEvaluationDomain<F>
+    domain: GeneralEvaluationDomain<F>,
 }
 
 impl<F: FftField> FftProcessor<F> {
@@ -15,9 +15,7 @@ impl<F: FftField> FftProcessor<F> {
         if domain.size() & domain.size() - 1 != 0 {
             return Err(Error::NotPow2);
         }
-        Ok(Self {
-            domain
-        })
+        Ok(Self { domain })
     }
 }
 

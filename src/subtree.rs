@@ -1,8 +1,11 @@
 use ark_ff::{batch_inversion, FftField};
-use ark_poly::{univariate::DensePolynomial, Polynomial, UVPolynomial, GeneralEvaluationDomain, EvaluationDomain};
+use ark_poly::{
+    univariate::DensePolynomial, EvaluationDomain, GeneralEvaluationDomain, Polynomial,
+    UVPolynomial,
+};
 
-use crate::{fast_eval::FastEval, PolyProcessor};
 pub use crate::error::Error;
+use crate::{fast_eval::FastEval, PolyProcessor};
 
 /// Saves one degree of 2 for FFT when a, b are monic polynomials in leading coefficient
 /// panics if a or b are not monic and degree 2
@@ -158,7 +161,10 @@ mod subtree_tests {
     use ark_poly::{univariate::DensePolynomial, Polynomial, UVPolynomial};
     use ark_std::test_rng;
 
-    use crate::{subtree::{Pow2ProductSubtree, multiply_pow2_monic_polys}, PolyProcessor};
+    use crate::{
+        subtree::{multiply_pow2_monic_polys, Pow2ProductSubtree},
+        PolyProcessor,
+    };
 
     /// given x coords construct Li polynomials
     fn construct_lagrange_basis<F: FftField>(evaluation_domain: &[F]) -> Vec<DensePolynomial<F>> {
