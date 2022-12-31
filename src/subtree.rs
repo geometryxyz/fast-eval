@@ -22,7 +22,7 @@ pub fn multiply_pow2_monic_polys<F: FftField>(
 
     let monic_deg = deg_a;
 
-    if monic_deg & monic_deg - 1 != 0 {
+    if monic_deg & (monic_deg - 1) != 0 {
         panic!("Poly a is not degree of 2");
     }
 
@@ -71,7 +71,7 @@ impl<F: FftField> Pow2ProductSubtree<F> {
             return Err(Error::EmptyRoots);
         }
 
-        if n & n - 1 != 0 {
+        if n & (n - 1) != 0 {
             return Err(Error::NotPow2);
         }
 
@@ -144,7 +144,7 @@ impl<F: FftField> PolyProcessor<F> for Pow2ProductSubtree<F> {
         batch_inversion(&mut monomials_evals);
 
         let k = self.layers.len() - 1;
-        let vh_eval = self.layers[k][0].evaluate(&point);
+        let vh_eval = self.layers[k][0].evaluate(point);
 
         self.ri
             .iter()
@@ -172,7 +172,7 @@ mod subtree_tests {
         for i in 0..evaluation_domain.len() {
             let mut l_i = DensePolynomial::from_coefficients_slice(&[F::one()]);
             let x_i = evaluation_domain[i];
-            for j in 0..evaluation_domain.len() {
+            for (j, _) in evaluation_domain.iter().enumerate() {
                 if j != i {
                     let xi_minus_xj_inv = (x_i - evaluation_domain[j]).inverse().unwrap();
                     l_i = &l_i
