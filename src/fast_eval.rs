@@ -74,7 +74,7 @@ impl<F: FftField> FastEval<F> {
                 let mut a = tmp.coeffs().to_vec();
                 a.resize(1 << i, F::zero()); //mod x^(2^i)
                 g = DensePolynomial::from_coefficients_vec(a);
-                i = i + 1;
+                i += 1;
             }
             Some(g)
         }
@@ -88,15 +88,14 @@ impl<F: FftField> FastEval<F> {
         for i in 0..poly.degree() + 1 {
             x[i] = vec_coeff[poly.degree() - i];
         }
-        let out = DensePolynomial::from_coefficients_vec(x);
-        out
+        DensePolynomial::from_coefficients_vec(x)
     }
 
     //for p(X)  outputs p(X) mod X^l
     fn poly_trim(poly: &DensePolynomial<F>, l: usize) -> DensePolynomial<F> {
         let mut vec_coeff = poly.coeffs().to_vec();
         vec_coeff.resize(l, F::zero());
-        return DensePolynomial::from_coefficients_vec(vec_coeff);
+        DensePolynomial::from_coefficients_vec(vec_coeff)
     }
 
     #[allow(non_snake_case)]
@@ -110,7 +109,7 @@ impl<F: FftField> FastEval<F> {
         } else if divisor.is_zero() {
             panic!("Dividing by zero polynomial")
         } else if poly.degree() < divisor.degree() {
-            Some((DensePolynomial::zero(), poly.clone().into()))
+            Some((DensePolynomial::zero(), poly.clone()))
         } else {
             // Now we know that self.degree() >= divisor.degree();
             // Use the formula for q: rev(q)=  rev(f)* rev(g)^{-1} mod x^{deg(f)-deg(g)+1}.

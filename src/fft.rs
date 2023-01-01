@@ -12,7 +12,7 @@ pub struct FftProcessor<F: FftField> {
 
 impl<F: FftField> FftProcessor<F> {
     pub fn construct(domain: GeneralEvaluationDomain<F>) -> Result<Self, Error> {
-        if domain.size() & domain.size() - 1 != 0 {
+        if domain.size() & (domain.size() - 1) != 0 {
             return Err(Error::NotPow2);
         }
         Ok(Self { domain })
